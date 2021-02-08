@@ -1,6 +1,6 @@
 {
     "name": "apply-config",
-    "version": "0.0.0",
+    "version": "0.0.1",
     "description": "A collection of scripts to apply various different config to a project",
     "main": "index.js",
     "scripts": {
