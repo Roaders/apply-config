@@ -1,11 +1,20 @@
 {
-  "name": "apply-config",
-  "version": "0.0.0",
-  "description": "A collection of scripts to apply various different config to a project",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Giles Roadnight",
-  "license": "ISC"
+    "name": "apply-config",
+    "version": "0.0.0",
+    "description": "A collection of scripts to apply various different config to a project",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Giles Roadnight",
+    "license": "ISC",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Roaders/apply-config.git"
+    },
+    "keywords": [],
+    "bugs": {
+        "url": "https://github.com/Roaders/apply-config/issues"
+    },
+    "homepage": "https://github.com/Roaders/apply-config#readme"
 }
