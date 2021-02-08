@@ -1,0 +1,11 @@
+{
+  "name": "apply-config",
+  "version": "0.0.0",
+  "description": "A collection of scripts to apply various different config to a project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Giles Roadnight",
+  "license": "ISC"
+}
