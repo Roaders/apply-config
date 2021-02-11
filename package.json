@@ -1,20 +1,55 @@
 {
     "name": "apply-config",
-    "version": "0.0.1",
-    "description": "A collection of scripts to apply various different config to a project",
-    "main": "index.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+    "version": "0.0.4",
+    "description": "A collection of helper scripts to apply various configs to a project",
+    "main": "dist/index.js",
+    "bin": {
+        "apply-config": "dist/index.js"
     },
+    "scripts": {
+        "clean": "rimraf dist",
+        "prebuild": "npm run clean && npm run lint",
+        "build": "tsc",
+        "watch:build": "tsc --watch",
+        "lint": "eslint . --ext .ts,.js"
+    },
+    "keywords": [
+        "eslint",
+        "typescript",
+        "setup",
+        "prettier",
+        "config",
+        "github",
+        "travis"
+    ],
     "author": "Giles Roadnight",
     "license": "ISC",
+    "devDependencies": {
+        "@types/node": "^14.14.25",
+        "@typescript-eslint/eslint-plugin": "^4.14.2",
+        "@typescript-eslint/parser": "^4.14.2",
+        "eslint": "^7.19.0",
+        "eslint-config-prettier": "^7.2.0",
+        "eslint-config-standard": "^16.0.2",
+        "eslint-plugin-import": "^2.22.1",
+        "eslint-plugin-node": "^11.1.0",
+        "eslint-plugin-prettier": "^3.3.1",
+        "eslint-plugin-promise": "^4.2.1",
+        "eslint-plugin-simple-import-sort": "^7.0.0",
+        "prettier": "^2.2.1",
+        "rimraf": "^3.0.2",
+        "typescript": "^4.1.3"
+    },
+    "dependencies": {
+        "chalk": "^4.1.0",
+        "detect-json-indent": "0.0.3"
+    },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/Roaders/apply-config.git"
+        "url": "git+https://github.com/Roaders/setup-typescript-eslint.git"
     },
-    "keywords": [],
     "bugs": {
-        "url": "https://github.com/Roaders/apply-config/issues"
+        "url": "https://github.com/Roaders/setup-typescript-eslint/issues"
     },
-    "homepage": "https://github.com/Roaders/apply-config#readme"
+    "homepage": "https://github.com/Roaders/setup-typescript-eslint#readme"
 }
