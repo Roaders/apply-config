@@ -12,21 +12,28 @@ export function writeProgressMessage(message: string, spinner = false): (success
     let timeout: NodeJS.Timeout | undefined;
 
     if (spinner) {
-        let dots = 0;
+        let dotCount = 0;
         process.stdout.write(message);
 
         timeout = setInterval(() => {
-            switch (dots) {
+            switch (dotCount) {
                 case 3:
-                    dots = 0;
-                    cursorTo(process.stdout, message.length);
-                    clearLine(process.stdout, 1);
+                    dotCount = 0;
                     break;
                 default:
-                    dots++;
-                    process.stdout.write('.');
+                    dotCount++;
             }
-        }, 250);
+
+            cursorTo(process.stdout, 0);
+            clearLine(process.stdout, 1);
+
+            const dots = Array.from({ length: dotCount })
+                .map(() => '.')
+                .join('');
+
+            process.stdout.write(`${message}${dots}`);
+            cursorTo(process.stdout, 0);
+        }, 100);
     } else {
         process.stdout.write(`${message}...`);
     }
