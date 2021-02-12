@@ -1,9 +1,13 @@
 # Apply Config
 
+A collection of scripts to quickly provide a base config of various common setups to your project
+
+## ESLint (with typescript and prettier)
+
 Configure your typescript project to work with eslint simply by running:
 
 ```
-npx apply-config eslint:typescript
+npx apply-config eslint-typescript
 ```
 
 This script will configure eslint to run on your project and install dependencies to lint typescript and to run prettier.

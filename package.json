@@ -10,7 +10,7 @@
         "clean": "rimraf dist",
         "prebuild": "npm run clean && npm run lint",
         "build": "tsc",
-        "watch:build": "tsc --watch",
+        "build:watch": "tsc --watch",
         "lint": "eslint . --ext .ts,.js"
     },
     "keywords": [

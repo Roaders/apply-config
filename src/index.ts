@@ -1,44 +1,34 @@
 #!/usr/bin/env node
 
-import { blue, green } from 'chalk';
-import { copyConfig, installDependencies, loadPackageJson, updatePackageJsonScripts } from './helpers';
+import { yellow } from 'chalk';
+import { configureEsLintTypescript } from './scripts/eslint-typescript';
 
-const configSourceFileName = 'eslint-config.js';
-const configTargetFileName = '.eslintrc.js';
+enum Config {
+    'eslint-typescript' = 'eslint-typescript',
+}
 
-async function configureEsLint() {
-    console.log(blue(`Configuring ESLint...`));
+type ConfigNames = keyof typeof Config;
 
-    const { packageJson, packageJsonPath, indent } = loadPackageJson();
+async function applyConfig() {
+    const config = (process.argv[2] as unknown) as ConfigNames;
 
-    copyConfig(configSourceFileName, configTargetFileName);
-    const scripts = {
-        lint: 'eslint . --ext .ts,.js',
-        'lint:fix': 'eslint . --ext .ts,.js --fix',
-    };
-    updatePackageJsonScripts(scripts, `Adding linting script to 'package.json'`, packageJson, packageJsonPath, indent);
-
-    const dependencies = [
-        'eslint',
-        'eslint-config-prettier',
-        'eslint-config-standard',
-        'eslint-plugin-import',
-        'eslint-plugin-node',
-        'eslint-plugin-prettier',
-        'eslint-plugin-promise',
-        '@typescript-eslint/eslint-plugin',
-        '@typescript-eslint/parser',
-        'prettier',
-    ];
-
-    const installSuccess = await installDependencies(dependencies);
-
-    if (installSuccess) {
-        console.log(` `);
-        console.log(green(`Installation complete.`));
-        console.log(`To lint your project run 'npm run lint'`);
-        console.log(`To attempt to auto fix any issues run 'npm run lint:fix'`);
+    switch (config) {
+        case 'eslint-typescript':
+            await configureEsLintTypescript();
+            break;
+        default:
+            handleIncorrectConfig(config);
     }
 }
 
-configureEsLint();
+function handleIncorrectConfig(script: never) {
+    if (!script) {
+        console.log(
+            yellow(`Please provide a valid config name to apply. Valid values are: ${Object.values(Config).join(', ')}`)
+        );
+    } else {
+        console.log(yellow(`'${script}' is not a valid config. Valid values are: ${Object.values(Config).join(', ')}`));
+    }
+}
+
+applyConfig();
