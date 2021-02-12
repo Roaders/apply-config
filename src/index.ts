@@ -5,6 +5,7 @@ import { configureEsLintTypescript } from './scripts/eslint-typescript';
 
 enum Config {
     'eslint-typescript' = 'eslint-typescript',
+    'githubActions' = 'githubActions',
 }
 
 type ConfigNames = keyof typeof Config;
