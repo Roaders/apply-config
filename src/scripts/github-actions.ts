@@ -23,7 +23,13 @@ export function configureGithubActions(): void {
     const scripts = {
         prepublishOnly: 'npm run build --if-present && npm run test --if-present && npm run lint --if-present',
     };
-    updatePackageJsonScripts(scripts, `Adding linting script to 'package.json'`, packageJson, packageJsonPath, indent);
+    updatePackageJsonScripts(
+        scripts,
+        `Adding prepublishOnly script to 'package.json'`,
+        packageJson,
+        packageJsonPath,
+        indent
+    );
 
     console.log(green(`Copying Complete`));
     console.log(
