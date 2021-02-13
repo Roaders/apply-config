@@ -1,5 +1,7 @@
 # Apply Config
 
+![Build](https://github.com/Roaders/apply-config/workflows/Build/badge.svg)
+
 A collection of scripts to quickly provide a base config of various common setups to your project
 
 ## ESLint (with typescript and prettier)
