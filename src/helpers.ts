@@ -1,7 +1,7 @@
 import { green, red } from 'chalk';
 import { exec } from 'child_process';
 import { copyFileSync, readFileSync, writeFileSync } from 'fs';
-import { join, isAbsolute } from 'path';
+import { join, basename } from 'path';
 import { clearLine, cursorTo } from 'readline';
 import { PackageJson, PackageJsonScripts } from './types';
 
@@ -93,14 +93,10 @@ export function updatePackageJsonScripts(
     complete();
 }
 
-export function copyConfig(fileName: string, destinationPath?: string): void {
-    destinationPath = destinationPath || fileName;
-    const configSrcPath = join(__dirname, '../', 'config', fileName);
-    const configTargetPath = isAbsolute(destinationPath) ? join(process.cwd(), destinationPath) : destinationPath;
+export function copyConfig(srcPath: string, targetPath: string): void {
+    const complete = writeProgressMessage(`Copying '${basename(srcPath)}' to '${targetPath}'`);
 
-    const complete = writeProgressMessage(`Copying config to '${configTargetPath}'`);
-
-    copyFileSync(configSrcPath, configTargetPath);
+    copyFileSync(srcPath, targetPath);
 
     complete();
 }

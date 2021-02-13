@@ -1,5 +1,6 @@
 import { blue, green } from 'chalk';
 import { copyConfig, installDependencies, loadPackageJson, updatePackageJsonScripts } from '../helpers';
+import { join, dirname } from 'path';
 
 const configSourceFileName = 'eslint-config.js';
 const configTargetFileName = '.eslintrc.js';
@@ -9,7 +10,10 @@ export async function configureEsLintTypescript(): Promise<void> {
 
     const { packageJson, packageJsonPath, indent } = loadPackageJson();
 
-    copyConfig(configSourceFileName, configTargetFileName);
+    copyConfig(
+        join(__dirname, '../../', 'config', configSourceFileName),
+        join(dirname(packageJsonPath), configTargetFileName)
+    );
     const scripts = {
         lint: 'eslint . --ext .ts,.js',
         'lint:fix': 'eslint . --ext .ts,.js --fix',
@@ -33,8 +37,8 @@ export async function configureEsLintTypescript(): Promise<void> {
 
     if (installSuccess) {
         console.log(` `);
-        console.log(green(`Installation complete.`));
-        console.log(`To lint your project run 'npm run lint'`);
-        console.log(`To attempt to auto fix any issues run 'npm run lint:fix'`);
+        console.log(green(`Installation Complete`));
+        console.log(blue(`To lint your project run 'npm run lint'`));
+        console.log(blue(`To attempt to auto fix any issues run 'npm run lint:fix'`));
     }
 }

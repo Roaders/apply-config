@@ -43,7 +43,8 @@
     },
     "dependencies": {
         "chalk": "^4.1.0",
-        "detect-json-indent": "0.0.3"
+        "detect-json-indent": "0.0.3",
+        "make-dir": "^3.1.0"
     },
     "repository": {
         "type": "git",
