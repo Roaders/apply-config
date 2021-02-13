@@ -14,6 +14,7 @@ export async function configureEsLintTypescript(): Promise<void> {
         join(__dirname, '../../', 'config', configSourceFileName),
         join(dirname(packageJsonPath), configTargetFileName)
     );
+
     const scripts = {
         lint: 'eslint . --ext .ts,.js',
         'lint:fix': 'eslint . --ext .ts,.js --fix',

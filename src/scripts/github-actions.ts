@@ -1,11 +1,13 @@
 import { blue, green } from 'chalk';
 import { readdirSync } from 'fs';
 import { join } from 'path';
-import { copyConfig } from '../helpers';
+import { copyConfig, loadPackageJson, updatePackageJsonScripts } from '../helpers';
 import makeDir from 'make-dir';
 
 export function configureGithubActions(): void {
     console.log(blue(`Copying sample GitHub Actions workflows`));
+
+    const { packageJson, packageJsonPath, indent } = loadPackageJson();
 
     const workflowsPath = join('.github', 'workflows');
     const sourceFolder = join(__dirname, '../../', workflowsPath);
@@ -17,6 +19,11 @@ export function configureGithubActions(): void {
     files.forEach((fileName) => {
         copyConfig(join(sourceFolder, fileName), join(targetFolder, fileName));
     });
+
+    const scripts = {
+        prepublishOnly: 'npm run build --if-present && npm run test --if-present && npm run lint --if-present',
+    };
+    updatePackageJsonScripts(scripts, `Adding linting script to 'package.json'`, packageJson, packageJsonPath, indent);
 
     console.log(green(`Copying Complete`));
     console.log(
