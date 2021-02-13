@@ -11,7 +11,8 @@
         "prebuild": "npm run clean",
         "build": "tsc",
         "build:watch": "tsc --watch",
-        "lint": "eslint . --ext .ts,.js"
+        "lint": "eslint . --ext .ts,.js",
+        "prepublishOnly": "npm run lint && npm run build"
     },
     "keywords": [
         "eslint",
