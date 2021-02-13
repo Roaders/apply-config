@@ -2,10 +2,11 @@
 
 import { yellow } from 'chalk';
 import { configureEsLintTypescript } from './scripts/eslint-typescript';
+import { configureGithubActions } from './scripts/github-actions';
 
 enum Config {
     'eslint-typescript' = 'eslint-typescript',
-    'githubActions' = 'githubActions',
+    'github-actions' = 'github-actions',
 }
 
 type ConfigNames = keyof typeof Config;
@@ -16,6 +17,9 @@ async function applyConfig() {
     switch (config) {
         case 'eslint-typescript':
             await configureEsLintTypescript();
+            break;
+        case 'github-actions':
+            await configureGithubActions();
             break;
         default:
             handleIncorrectConfig(config);
