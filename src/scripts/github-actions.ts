@@ -32,6 +32,7 @@ export function configureGithubActions(): void {
     );
 
     console.log(green(`Copying Complete`));
+    console.log(blue(`Please generate an npm access token and add it to your repository secrets as 'NPM_TOKEN'`));
     console.log(
         blue(
             `If you are unable to push workflow files to GitHub create a new Personal Access Token with the 'workflow' scope.`
