@@ -8,7 +8,7 @@ import { configureKarmaWebpack } from './scripts/karma-webpack';
 enum Config {
     'eslint-typescript' = 'eslint-typescript',
     'github-actions' = 'github-actions',
-    'karma-webpack' = 'karma-webpack',
+    'karma-webpack-typescript' = 'karma-webpack-typescript',
 }
 
 type ConfigNames = keyof typeof Config;
@@ -23,7 +23,7 @@ async function applyConfig() {
         case 'github-actions':
             await configureGithubActions();
             break;
-        case 'karma-webpack':
+        case 'karma-webpack-typescript':
             await configureKarmaWebpack();
             break;
         default:

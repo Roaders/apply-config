@@ -23,7 +23,7 @@ The sample config is supposed to be a starting point to get you going. You can t
 
 ## GitHub Actions
 
-Get started with 2 simple workflows, one that runs your build on every checkin and one that pushes to NPM when you create a release
+Get started with 2 simple workflows, one that runs your build on every check-in and one that pushes to NPM when you create a release
 
 ```
 npx apply-config github-actions
@@ -31,3 +31,18 @@ npx apply-config github-actions
 
  * Verifies that `package.json` can be located
  * copies `build.yml` and `release.yml` to `.github/workflows`
+
+ ## Karma Webpack (with typescript support)
+
+ An alternative to using angular test bed. Faster to run and much less maintenance.
+
+ ```
+ npx apply-config github-actions karma-webpack-typescript
+ ```
+
+ * Verifies that `package.json` can be located
+ * asks for the location to copy `test.ts` to (defaults to `src`)
+ * copies the base `karma.conf.js` to your project folder
+ * copies `test.ts` to specified folder
+ * adds or updates the `test` and `test:watch` npm script
+ * installs the required dev dependencies
