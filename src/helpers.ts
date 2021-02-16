@@ -93,10 +93,16 @@ export function updatePackageJsonScripts(
     complete();
 }
 
-export function copyConfig(srcPath: string, targetPath: string): void {
+export function copyConfig(srcPath: string, targetPath: string, replaceContent?: (value: string) => string): void {
     const complete = writeProgressMessage(`Copying '${basename(srcPath)}' to '${targetPath}'`);
 
-    copyFileSync(srcPath, targetPath);
+    if (replaceContent) {
+        let fileContent = readFileSync(srcPath).toString();
+        fileContent = replaceContent(fileContent);
+        writeFileSync(targetPath, fileContent);
+    } else {
+        copyFileSync(srcPath, targetPath);
+    }
 
     complete();
 }

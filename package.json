@@ -27,6 +27,7 @@
     "license": "ISC",
     "devDependencies": {
         "@types/node": "^14.14.25",
+        "@types/promptly": "^3.0.1",
         "@typescript-eslint/eslint-plugin": "^4.14.2",
         "@typescript-eslint/parser": "^4.14.2",
         "eslint": "^7.19.0",
@@ -44,7 +45,8 @@
     "dependencies": {
         "chalk": "^4.1.0",
         "detect-json-indent": "0.0.3",
-        "make-dir": "^3.1.0"
+        "make-dir": "^3.1.0",
+        "promptly": "^3.2.0"
     },
     "repository": {
         "type": "git",
