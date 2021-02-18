@@ -1,10 +1,10 @@
 import { blue, green } from 'chalk';
 import { readdirSync } from 'fs';
 import { join } from 'path';
-import { copyConfig, loadPackageJson, updatePackageJsonScripts } from '../helpers';
+import { copyConfig, loadPackageJson, updatePackageJsonScripts, writeProgressMessage } from '../helpers';
 import makeDir from 'make-dir';
 
-export function configureGithubActions(): void {
+export async function configureGithubActions(): Promise<void> {
     console.log(blue(`Copying sample GitHub Actions workflows`));
 
     const { packageJson, packageJsonPath, indent } = loadPackageJson();
@@ -14,7 +14,11 @@ export function configureGithubActions(): void {
     const targetFolder = join(process.cwd(), workflowsPath);
     const files = readdirSync(sourceFolder);
 
-    makeDir(targetFolder);
+    const makeDirComplete = writeProgressMessage(`Creating folder '${workflowsPath}'`);
+
+    await makeDir(targetFolder);
+
+    makeDirComplete();
 
     files.forEach((fileName) => {
         copyConfig(join(sourceFolder, fileName), join(targetFolder, fileName));
