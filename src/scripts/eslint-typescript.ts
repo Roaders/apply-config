@@ -15,23 +15,25 @@ export async function configureEsLintTypescript(): Promise<void> {
         join(dirname(packageJsonPath), configTargetFileName)
     );
 
+    const extensions = `.ts,.d.ts,.js`;
+
     const scripts = {
-        lint: 'eslint . --ext .ts,.js',
-        'lint:fix': 'eslint . --ext .ts,.js --fix',
+        lint: `eslint . --ext ${extensions}`,
+        'lint:fix': `eslint . --ext ${extensions} --fix`,
     };
     updatePackageJsonScripts(scripts, `Adding linting script to 'package.json'`, packageJson, packageJsonPath, indent);
 
     const dependencies = [
-        'eslint',
-        'eslint-config-prettier',
-        'eslint-config-standard',
-        'eslint-plugin-import',
-        'eslint-plugin-node',
-        'eslint-plugin-prettier',
-        'eslint-plugin-promise',
-        '@typescript-eslint/eslint-plugin',
-        '@typescript-eslint/parser',
-        'prettier',
+        'eslint@7.7',
+        'eslint-config-prettier@6.11',
+        'eslint-config-standard@14.1',
+        'eslint-plugin-import@2.22',
+        'eslint-plugin-node@11.1',
+        'eslint-plugin-prettier@3.1',
+        'eslint-plugin-promise@4.2',
+        '@typescript-eslint/eslint-plugin@3.10',
+        '@typescript-eslint/parser@3.10',
+        'prettier@2.1',
     ];
 
     const installSuccess = await installDependencies(dependencies);
