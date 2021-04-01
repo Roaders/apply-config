@@ -1,6 +1,6 @@
 {
     "name": "apply-config",
-    "version": "1.2.2",
+    "version": "1.2.3",
     "description": "A collection of helper scripts to apply various configs to a project",
     "main": "dist/index.js",
     "bin": {
