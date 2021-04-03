@@ -54,6 +54,16 @@ export function writeProgressMessage(message: string, spinner = false): (success
     };
 }
 
+export function getDependencyVersions(packageJson: PackageJson, dependencyList: string[]): string[] {
+    const dependencies = { ...packageJson.devDependencies, ...packageJson.dependencies };
+
+    return dependencyList.map((dependencyName) => {
+        const version = dependencies[dependencyName];
+
+        return version == null ? dependencyName : `${dependencyName}@${version}`;
+    });
+}
+
 export function installDependencies(dependencies: string[]): Promise<boolean> {
     const complete = writeProgressMessage(`Installing dev dependencies`, true);
 
@@ -107,12 +117,14 @@ export function copyConfig(srcPath: string, targetPath: string, replaceContent?:
     complete();
 }
 
-export function loadPackageJson(): {
+export function loadPackageJson(
+    path?: string
+): {
     packageJsonPath: string;
     packageJson: PackageJson;
     indent: string;
 } {
-    const packageJsonPath = join(process.cwd(), 'package.json');
+    const packageJsonPath = path || join(process.cwd(), 'package.json');
 
     const complete = writeProgressMessage(`Loading 'package.json'`);
 

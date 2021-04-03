@@ -1,5 +1,11 @@
 import { blue, green } from 'chalk';
-import { copyConfig, installDependencies, loadPackageJson, updatePackageJsonScripts } from '../helpers';
+import {
+    copyConfig,
+    getDependencyVersions,
+    installDependencies,
+    loadPackageJson,
+    updatePackageJsonScripts,
+} from '../helpers';
 import { join, dirname } from 'path';
 
 const configSourceFileName = 'eslint-config.js';
@@ -24,19 +30,25 @@ export async function configureEsLintTypescript(): Promise<void> {
     updatePackageJsonScripts(scripts, `Adding linting script to 'package.json'`, packageJson, packageJsonPath, indent);
 
     const dependencies = [
-        'eslint@7.7',
-        'eslint-config-prettier@6.11',
-        'eslint-config-standard@14.1',
-        'eslint-plugin-import@2.22',
-        'eslint-plugin-node@11.1',
-        'eslint-plugin-prettier@3.1',
-        'eslint-plugin-promise@4.2',
-        '@typescript-eslint/eslint-plugin@3.10',
-        '@typescript-eslint/parser@3.10',
-        'prettier@2.1',
+        'eslint',
+        'eslint-config-prettier',
+        'eslint-config-standard',
+        'eslint-plugin-import',
+        'eslint-plugin-node',
+        'eslint-plugin-prettier',
+        'eslint-plugin-promise',
+        '@typescript-eslint/eslint-plugin',
+        '@typescript-eslint/parser',
+        'prettier',
     ];
 
-    const installSuccess = await installDependencies(dependencies);
+    const { packageJson: localPackageJson } = loadPackageJson(join(__dirname, '../../package.json'));
+
+    const versionedDependencies = getDependencyVersions(localPackageJson, dependencies);
+
+    console.log({ versionedDependencies });
+
+    const installSuccess = await installDependencies(versionedDependencies);
 
     if (installSuccess) {
         console.log(` `);
