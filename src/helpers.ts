@@ -64,6 +64,41 @@ export function getDependencyVersions(packageJson: PackageJson, dependencyList: 
     });
 }
 
+export function copyScripts(source: PackageJson, scripts: string[]): Record<string, string> {
+    const sourceScripts = source.scripts;
+
+    if (scripts.length === 0) {
+        return {};
+    }
+
+    if (sourceScripts == null) {
+        throw new Error(`No scripts defined on source package json`);
+    }
+
+    const scriptValues = scripts.map((scriptName) => ({
+        scriptName,
+        scriptValue: sourceScripts[scriptName],
+    }));
+
+    const missingScripts = scriptValues
+        .filter(({ scriptValue }) => scriptValue == null)
+        .map(({ scriptName }) => scriptName);
+
+    if (missingScripts.length > 0) {
+        throw new Error(
+            `Could not find scripts [${missingScripts.map((scriptName) => "'" + scriptName + "'").join(', ')}] to copy.`
+        );
+    }
+
+    let returnScripts = {};
+
+    scripts.forEach((scriptName) => {
+        returnScripts = { ...returnScripts, [scriptName]: sourceScripts[scriptName] };
+    });
+
+    return returnScripts;
+}
+
 export function installDependencies(dependencies: string[]): Promise<boolean> {
     const complete = writeProgressMessage(`Installing dev dependencies`, true);
 
@@ -92,7 +127,6 @@ export function updatePackageJsonScripts(
 ): void {
     const complete = writeProgressMessage(message);
 
-    packageJson.scripts = packageJson.scripts || {};
     packageJson.scripts = {
         ...packageJson.scripts,
         ...scripts,

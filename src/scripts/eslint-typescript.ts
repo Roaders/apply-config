@@ -1,6 +1,7 @@
 import { blue, green } from 'chalk';
 import {
     copyConfig,
+    copyScripts,
     getDependencyVersions,
     installDependencies,
     loadPackageJson,
@@ -21,12 +22,8 @@ export async function configureEsLintTypescript(): Promise<void> {
         join(dirname(packageJsonPath), configTargetFileName)
     );
 
-    const extensions = `.ts,.d.ts,.js`;
-
-    const scripts = {
-        lint: `eslint . --ext ${extensions}`,
-        'lint:fix': `eslint . --ext ${extensions} --fix`,
-    };
+    const { packageJson: localPackageJson } = loadPackageJson(join(__dirname, '../../package.json'));
+    const scripts = copyScripts(localPackageJson, ['lint', 'lint:fix']);
     updatePackageJsonScripts(scripts, `Adding linting script to 'package.json'`, packageJson, packageJsonPath, indent);
 
     const dependencies = [
@@ -41,8 +38,6 @@ export async function configureEsLintTypescript(): Promise<void> {
         '@typescript-eslint/parser',
         'prettier',
     ];
-
-    const { packageJson: localPackageJson } = loadPackageJson(join(__dirname, '../../package.json'));
 
     const versionedDependencies = getDependencyVersions(localPackageJson, dependencies);
 
