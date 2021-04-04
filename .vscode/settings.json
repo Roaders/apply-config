@@ -1,0 +1,3 @@
+{
+    "window.title": "apply-config ${dirty}${activeEditorShort}${separator}${rootName}${separator}${appName}"
+}
