@@ -54,13 +54,15 @@ export function writeProgressMessage(message: string, spinner = false): (success
     };
 }
 
+const versionModiferRegExp = /^[\^~]/;
+
 export function getDependencyVersions(packageJson: PackageJson, dependencyList: string[]): string[] {
     const dependencies = { ...packageJson.devDependencies, ...packageJson.dependencies };
 
     return dependencyList.map((dependencyName) => {
         const version = dependencies[dependencyName];
 
-        return version == null ? dependencyName : `${dependencyName}@${version}`;
+        return version == null ? dependencyName : `${dependencyName}@${version.replace(versionModiferRegExp, '')}`;
     });
 }
 

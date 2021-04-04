@@ -41,8 +41,6 @@ export async function configureEsLintTypescript(): Promise<void> {
 
     const versionedDependencies = getDependencyVersions(localPackageJson, dependencies);
 
-    console.log({ versionedDependencies });
-
     const installSuccess = await installDependencies(versionedDependencies);
 
     if (installSuccess) {

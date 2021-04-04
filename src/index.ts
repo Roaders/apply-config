@@ -4,11 +4,13 @@ import { yellow } from 'chalk';
 import { configureEsLintTypescript } from './scripts/eslint-typescript';
 import { configureGithubActions } from './scripts/github-actions';
 import { configureKarmaWebpack } from './scripts/karma-webpack';
+import { configureTsJest } from './scripts/ts-jest';
 
 enum Config {
     'eslint-typescript' = 'eslint-typescript',
     'github-actions' = 'github-actions',
     'karma-webpack-typescript' = 'karma-webpack-typescript',
+    'jest-typescript' = 'jest-typescript',
 }
 
 type ConfigNames = keyof typeof Config;
@@ -25,6 +27,9 @@ async function applyConfig() {
             break;
         case 'karma-webpack-typescript':
             await configureKarmaWebpack();
+            break;
+        case 'jest-typescript':
+            await configureTsJest();
             break;
         default:
             handleIncorrectConfig(config);
