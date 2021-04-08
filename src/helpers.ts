@@ -19,21 +19,14 @@ export function writeProgressMessage(message: string, spinner = false): (success
             switch (dotCount) {
                 case 3:
                     dotCount = 0;
+                    cursorTo(process.stdout, message.length);
+                    clearLine(process.stdout, 1);
                     break;
                 default:
                     dotCount++;
+                    process.stdout.write(`.`);
             }
-
-            cursorTo(process.stdout, 0);
-            clearLine(process.stdout, 1);
-
-            const dots = Array.from({ length: dotCount })
-                .map(() => '.')
-                .join('');
-
-            process.stdout.write(`${message}${dots}`);
-            cursorTo(process.stdout, 0);
-        }, 100);
+        }, 300);
     } else {
         process.stdout.write(`${message}...`);
     }
