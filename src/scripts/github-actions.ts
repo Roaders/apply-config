@@ -14,11 +14,11 @@ export async function configureGithubActions(): Promise<void> {
     const targetFolder = join(process.cwd(), workflowsPath);
     const files = readdirSync(sourceFolder);
 
-    const makeDirComplete = writeProgressMessage(`Creating folder '${workflowsPath}'`);
+    const makeDirProgress = writeProgressMessage(`Creating folder '${workflowsPath}'`);
 
     await makeDir(targetFolder);
 
-    makeDirComplete();
+    makeDirProgress.complete();
 
     files.forEach((fileName) => {
         copyConfig(join(sourceFolder, fileName), join(targetFolder, fileName));

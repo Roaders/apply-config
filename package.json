@@ -2,7 +2,8 @@
     "name": "apply-config",
     "version": "1.3.2",
     "description": "A collection of helper scripts to apply various configs to a project",
-    "main": "dist/index.js",
+    "main": "dist/helpers.js",
+    "types": "dist/helpers.d.ts",
     "bin": {
         "apply-config": "dist/index.js"
     },

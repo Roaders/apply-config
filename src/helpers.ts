@@ -8,12 +8,42 @@ import { PackageJson, PackageJsonScripts } from './types';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const detect = require('detect-json-indent');
 
-export function writeProgressMessage(message: string, spinner = false): (success?: boolean) => void {
+type ProgressMessageResult = {
+    complete: (success?: boolean, updateMessage?: string) => void;
+    log: (message: string, ...optional: unknown[]) => void;
+    updateMessage: (message: string) => void;
+};
+
+export function writeProgressMessage(
+    message: string,
+    spinner = false,
+    format?: (message: string) => string
+): ProgressMessageResult {
     let timeout: NodeJS.Timeout | undefined;
 
+    const formatMessage = format || ((value) => value);
+
+    let dotCount = 3;
+
+    function generateMessage() {
+        const dots = Array.from({ length: dotCount })
+            .map(() => '.')
+            .join('');
+        return formatMessage(message + dots);
+    }
+
+    function resetCursor() {
+        cursorTo(process.stdout, 0);
+        clearLine(process.stdout, 1);
+    }
+
+    function writeMessage() {
+        process.stdout.write(generateMessage());
+    }
+
     if (spinner) {
-        let dotCount = 0;
-        process.stdout.write(message);
+        dotCount = 0;
+        writeMessage();
 
         timeout = setInterval(() => {
             switch (dotCount) {
@@ -28,26 +58,42 @@ export function writeProgressMessage(message: string, spinner = false): (success
             }
         }, 300);
     } else {
-        process.stdout.write(`${message}...`);
+        writeMessage();
     }
 
-    return (success = true) => {
+    function updateMessage(messageUpdate: string) {
+        message = messageUpdate;
+        resetCursor();
+        writeMessage();
+    }
+
+    function log(logMessage: string, ...optional: unknown[]) {
+        resetCursor();
+        console.log(logMessage, ...optional);
+        writeMessage();
+    }
+
+    function complete(success = true, updateMessage?: string) {
         if (timeout != null) {
             clearInterval(timeout);
         }
 
-        cursorTo(process.stdout, 0);
-        clearLine(process.stdout, 1);
+        dotCount = 3;
+
+        resetCursor();
+        message = updateMessage || message;
 
         if (success) {
-            console.log(`${message}... ${green('\u2713')}`);
+            console.log(`${generateMessage()} ${green('\u2713')}`);
         } else {
-            console.log(`${message}... ${red('\u2715')}`);
+            console.log(`${generateMessage()} ${red('\u2715')}`);
         }
-    };
+    }
+
+    return { complete, log, updateMessage };
 }
 
-const versionModiferRegExp = /^[\^~]/;
+const versionModifierRegExp = /^[\^~]/;
 
 export function getDependencyVersions(packageJson: PackageJson, dependencyList: string[]): string[] {
     const dependencies = { ...packageJson.devDependencies, ...packageJson.dependencies };
@@ -55,7 +101,7 @@ export function getDependencyVersions(packageJson: PackageJson, dependencyList: 
     return dependencyList.map((dependencyName) => {
         const version = dependencies[dependencyName];
 
-        return version == null ? dependencyName : `${dependencyName}@${version.replace(versionModiferRegExp, '')}`;
+        return version == null ? dependencyName : `${dependencyName}@${version.replace(versionModifierRegExp, '')}`;
     });
 }
 
@@ -95,7 +141,7 @@ export function copyScripts(source: PackageJson, scripts: string[]): Record<stri
 }
 
 export function installDependencies(dependencies: string[]): Promise<boolean> {
-    const complete = writeProgressMessage(`Installing dev dependencies`, true);
+    const complete = writeProgressMessage(`Installing dev dependencies`, true).complete;
 
     return new Promise((resolve) => {
         const installCommand = `npm install -D ${dependencies.join(' ')}`;
@@ -120,7 +166,7 @@ export function updatePackageJsonScripts(
     packageJsonPath: string,
     indent: string
 ): void {
-    const complete = writeProgressMessage(message);
+    const complete = writeProgressMessage(message).complete;
 
     packageJson.scripts = {
         ...packageJson.scripts,
@@ -133,7 +179,7 @@ export function updatePackageJsonScripts(
 }
 
 export function copyConfig(srcPath: string, targetPath: string, replaceContent?: (value: string) => string): void {
-    const complete = writeProgressMessage(`Copying '${basename(srcPath)}' to '${targetPath}'`);
+    const complete = writeProgressMessage(`Copying '${basename(srcPath)}' to '${targetPath}'`).complete;
 
     if (replaceContent) {
         let fileContent = readFileSync(srcPath).toString();
@@ -155,7 +201,7 @@ export function loadPackageJson(
 } {
     const packageJsonPath = path || join(process.cwd(), 'package.json');
 
-    const complete = writeProgressMessage(`Loading 'package.json'`);
+    const complete = writeProgressMessage(`Loading 'package.json'`).complete;
 
     let packageJson: PackageJson;
     let indent = '';
