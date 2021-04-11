@@ -7,6 +7,8 @@ import { PackageJson, PackageJsonScripts } from './types';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const detect = require('detect-json-indent');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const logSymbols = require('log-symbols');
 
 export type ProgressMessage = {
     complete: (success?: boolean, updateMessage?: string) => void;
@@ -105,9 +107,9 @@ export function writeProgressMessage(
         message = updateMessage || message;
 
         if (success) {
-            console.log(`${generateMessage()} ${green('\u2713')}`);
+            console.log(`${generateMessage()} ${logSymbols.success}`);
         } else {
-            console.log(`${generateMessage()} ${red('\u2715')}`);
+            console.log(`${generateMessage()} ${logSymbols.error}`);
         }
     }
 

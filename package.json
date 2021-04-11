@@ -52,6 +52,7 @@
     "dependencies": {
         "chalk": "^4.1.0",
         "detect-json-indent": "0.0.3",
+        "log-symbols": "^4.1.0",
         "make-dir": "^3.1.0",
         "promptly": "^3.2.0"
     },
