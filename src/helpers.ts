@@ -8,18 +8,20 @@ import { PackageJson, PackageJsonScripts } from './types';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const detect = require('detect-json-indent');
 
-type ProgressMessageResult = {
+export type ProgressMessage = {
     complete: (success?: boolean, updateMessage?: string) => void;
     log: (message: string, ...optional: unknown[]) => void;
-    updateMessage: (message: string) => void;
+    updateMessage: (message: string, spinner?: boolean) => void;
+    getMessage: () => string;
 };
 
 export function writeProgressMessage(
     message: string,
     spinner = false,
     format?: (message: string) => string
-): ProgressMessageResult {
+): ProgressMessage {
     let timeout: NodeJS.Timeout | undefined;
+    let isComplete = false;
 
     const formatMessage = format || ((value) => value);
 
@@ -41,7 +43,7 @@ export function writeProgressMessage(
         process.stdout.write(generateMessage());
     }
 
-    if (spinner) {
+    function startTimer() {
         dotCount = 0;
         writeMessage();
 
@@ -57,23 +59,41 @@ export function writeProgressMessage(
                     process.stdout.write(`.`);
             }
         }, 300);
+    }
+
+    if (spinner) {
+        startTimer();
     } else {
         writeMessage();
     }
 
-    function updateMessage(messageUpdate: string) {
+    function updateMessage(messageUpdate: string, spinner?: boolean) {
+        if (isComplete) {
+            throw new Error(`Progress Message is complete`);
+        }
+        if (spinner === true && timeout == null) {
+            startTimer();
+        } else if (spinner === false && timeout != null) {
+            clearInterval(timeout);
+            timeout = undefined;
+        }
+
         message = messageUpdate;
         resetCursor();
         writeMessage();
     }
 
     function log(logMessage: string, ...optional: unknown[]) {
+        if (isComplete) {
+            throw new Error(`Progress Message is complete`);
+        }
         resetCursor();
         console.log(logMessage, ...optional);
         writeMessage();
     }
 
     function complete(success = true, updateMessage?: string) {
+        isComplete = true;
         if (timeout != null) {
             clearInterval(timeout);
         }
@@ -90,7 +110,11 @@ export function writeProgressMessage(
         }
     }
 
-    return { complete, log, updateMessage };
+    function getMessage() {
+        return message;
+    }
+
+    return { complete, log, updateMessage, getMessage };
 }
 
 const versionModifierRegExp = /^[\^~]/;
