@@ -74,6 +74,7 @@ export function writeProgressMessage(
         if (spinner === true && timeout == null) {
             startTimer();
         } else if (spinner === false && timeout != null) {
+            dotCount = 0;
             clearInterval(timeout);
             timeout = undefined;
         }
