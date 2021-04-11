@@ -1,4 +1,4 @@
-import { green, red } from 'chalk';
+import { red } from 'chalk';
 import { exec } from 'child_process';
 import { copyFileSync, readFileSync, writeFileSync } from 'fs';
 import { join, basename } from 'path';
