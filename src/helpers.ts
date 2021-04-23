@@ -58,7 +58,7 @@ export function writeProgressMessage(
                     break;
                 default:
                     dotCount++;
-                    process.stdout.write(`.`);
+                    process.stdout.write(formatMessage(`.`));
             }
         }, 300);
     }
