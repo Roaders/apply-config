@@ -2,123 +2,15 @@ import { red } from 'chalk';
 import { exec } from 'child_process';
 import { copyFileSync, readFileSync, writeFileSync } from 'fs';
 import { join, basename } from 'path';
-import { clearLine, cursorTo } from 'readline';
 import { PackageJson, PackageJsonScripts } from './types';
+import print from 'message-await';
+import { promisify } from 'util';
+
+const execAsync = promisify(exec);
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const detect = require('detect-json-indent');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const logSymbols = require('log-symbols');
-
-export type ProgressMessage = {
-    complete: (success?: boolean, updateMessage?: string) => void;
-    log: (message: string, ...optional: unknown[]) => void;
-    updateMessage: (message: string, spinner?: boolean) => void;
-    getMessage: () => string;
-};
-
-export function writeProgressMessage(
-    message: string,
-    spinner = false,
-    format?: (message: string) => string
-): ProgressMessage {
-    let timeout: NodeJS.Timeout | undefined;
-    let isComplete = false;
-
-    const formatMessage = format || ((value) => value);
-
-    let dotCount = 3;
-
-    function generateMessage() {
-        const dots = Array.from({ length: dotCount })
-            .map(() => '.')
-            .join('');
-        return formatMessage(message + dots);
-    }
-
-    function resetCursor() {
-        cursorTo(process.stdout, 0);
-        clearLine(process.stdout, 1);
-    }
-
-    function writeMessage() {
-        process.stdout.write(generateMessage());
-    }
-
-    function startTimer() {
-        dotCount = 0;
-        writeMessage();
-
-        timeout = setInterval(() => {
-            switch (dotCount) {
-                case 3:
-                    dotCount = 0;
-                    cursorTo(process.stdout, message.length);
-                    clearLine(process.stdout, 1);
-                    break;
-                default:
-                    dotCount++;
-                    process.stdout.write(formatMessage(`.`));
-            }
-        }, 300);
-    }
-
-    if (spinner) {
-        startTimer();
-    } else {
-        writeMessage();
-    }
-
-    function updateMessage(messageUpdate: string, spinner?: boolean) {
-        if (isComplete) {
-            throw new Error(`Progress Message is complete`);
-        }
-        if (spinner === true && timeout == null) {
-            startTimer();
-        } else if (spinner === false && timeout != null) {
-            dotCount = 0;
-            clearInterval(timeout);
-            timeout = undefined;
-        }
-
-        message = messageUpdate;
-        resetCursor();
-        writeMessage();
-    }
-
-    function log(logMessage: string, ...optional: unknown[]) {
-        if (isComplete) {
-            throw new Error(`Progress Message is complete`);
-        }
-        resetCursor();
-        console.log(logMessage, ...optional);
-        writeMessage();
-    }
-
-    function complete(success = true, updateMessage?: string) {
-        isComplete = true;
-        if (timeout != null) {
-            clearInterval(timeout);
-        }
-
-        dotCount = 3;
-
-        resetCursor();
-        message = updateMessage || message;
-
-        if (success) {
-            console.log(`${generateMessage()} ${logSymbols.success}`);
-        } else {
-            console.log(`${generateMessage()} ${logSymbols.error}`);
-        }
-    }
-
-    function getMessage() {
-        return message;
-    }
-
-    return { complete, log, updateMessage, getMessage };
-}
 
 const versionModifierRegExp = /^[\^~]/;
 
@@ -167,23 +59,21 @@ export function copyScripts(source: PackageJson, scripts: string[]): Record<stri
     return returnScripts;
 }
 
-export function installDependencies(dependencies: string[]): Promise<boolean> {
-    const complete = writeProgressMessage(`Installing dev dependencies`, true).complete;
+export async function installDependencies(dependencies: string[]): Promise<boolean> {
+    const installCommand = `npm install -D ${dependencies.join(' ')}`;
 
-    return new Promise((resolve) => {
-        const installCommand = `npm install -D ${dependencies.join(' ')}`;
-
-        exec(installCommand, (error) => {
-            complete(error == null);
-            if (error) {
-                console.log(` `);
-                console.log(red(`Error installing dependencies:`), error);
-                resolve(false);
-            } else {
-                resolve(true);
-            }
+    return await print(`Installing dev dependencies`, true)
+        .await(execAsync(installCommand))
+        .then(({ stderr, stdout }) => {
+            console.log(stderr);
+            console.log(stdout);
+            return true;
+        })
+        .catch((err) => {
+            console.log(` `);
+            console.log(red(`Error installing dependencies:`), err);
+            return false;
         });
-    });
 }
 
 export function updatePackageJsonScripts(
@@ -193,7 +83,7 @@ export function updatePackageJsonScripts(
     packageJsonPath: string,
     indent: string
 ): void {
-    const complete = writeProgressMessage(message).complete;
+    const { complete } = print(message);
 
     packageJson.scripts = {
         ...packageJson.scripts,
@@ -206,7 +96,7 @@ export function updatePackageJsonScripts(
 }
 
 export function copyConfig(srcPath: string, targetPath: string, replaceContent?: (value: string) => string): void {
-    const complete = writeProgressMessage(`Copying '${basename(srcPath)}' to '${targetPath}'`).complete;
+    const { complete } = print(`Copying '${basename(srcPath)}' to '${targetPath}'`);
 
     if (replaceContent) {
         let fileContent = readFileSync(srcPath).toString();
@@ -228,7 +118,7 @@ export function loadPackageJson(
 } {
     const packageJsonPath = path || join(process.cwd(), 'package.json');
 
-    const complete = writeProgressMessage(`Loading 'package.json'`).complete;
+    const { complete } = print(`Loading 'package.json'`);
 
     let packageJson: PackageJson;
     let indent = '';
@@ -237,13 +127,15 @@ export function loadPackageJson(
         const stringified = readFileSync(packageJsonPath).toString();
         indent = detect(stringified);
         packageJson = JSON.parse(stringified);
+
+        complete();
     } catch (e) {
+        complete(false);
         console.log(`${red(`Error:`)} could not load package.json from '${packageJsonPath}'.`);
         console.log(`Please ensure you run command from a folder that contains a package.json.`);
+
         process.exit(1);
     }
-
-    complete();
 
     return { packageJsonPath, packageJson, indent };
 }
