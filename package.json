@@ -59,10 +59,10 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/Roaders/setup-typescript-eslint.git"
+        "url": "git+https://github.com/Roaders/apply-config.git"
     },
     "bugs": {
-        "url": "https://github.com/Roaders/setup-typescript-eslint/issues"
+        "url": "https://github.com/Roaders/apply-config/issues"
     },
-    "homepage": "https://github.com/Roaders/setup-typescript-eslint#readme"
+    "homepage": "https://github.com/Roaders/apply-config#readme"
 }
