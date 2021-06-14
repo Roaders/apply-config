@@ -1,6 +1,6 @@
 {
     "name": "apply-config",
-    "version": "2.0.1",
+    "version": "2.0.2",
     "description": "A collection of helper scripts to apply various configs to a project",
     "main": "dist/helpers.js",
     "types": "dist/helpers.d.ts",
