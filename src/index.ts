@@ -19,14 +19,14 @@ async function applyConfig() {
     const config = (process.argv[2] as unknown) as ConfigNames;
 
     switch (config) {
-        case 'eslint-typescript':
-            await configureEsLintTypescript();
-            break;
         case 'github-actions':
             await configureGithubActions();
             break;
         case 'karma-webpack-typescript':
             await configureKarmaWebpack();
+            break;
+        case 'eslint-typescript':
+            await configureEsLintTypescript();
             break;
         case 'jest-typescript':
             await configureTsJest();

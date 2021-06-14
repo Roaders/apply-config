@@ -32,13 +32,13 @@ npx apply-config github-actions
  * Verifies that `package.json` can be located
  * copies `build.yml` and `release.yml` to `.github/workflows`
 
- ## Karma Webpack (with typescript support)
+## Karma Webpack (with typescript support)
 
  An alternative to using angular test bed. Faster to run and much less maintenance.
 
- ```
- npx apply-config github-actions karma-webpack-typescript
- ```
+```
+npx apply-config github-actions karma-webpack-typescript
+```
 
  * Verifies that `package.json` can be located
  * asks for the location to copy `test.ts` to (defaults to `src`)
@@ -46,3 +46,21 @@ npx apply-config github-actions
  * copies `test.ts` to specified folder
  * adds or updates the `test` and `test:watch` npm script
  * installs the required dev dependencies
+
+## ESLint Typescript
+
+```
+npx apply-config github-actions eslint-typescript
+```
+ * copies sample `.eslintrc.js` to project
+ * adds `lint` and `lint:fix` scripts to `package.json`
+ * install `eslint`, `prettier` and `@typescript-eslint` dependencies
+
+## Jest Typescript
+
+```
+npx apply-config github-actions jest-typescript
+```
+ * copies sample `jest.config.js` to project
+ * adds `test` and `test:watch` scripts to `package.json`
+ * install `jest` and `ts-jest` dependencies
