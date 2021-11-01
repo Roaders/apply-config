@@ -37,7 +37,7 @@ npx apply-config github-actions
  An alternative to using angular test bed. Faster to run and much less maintenance.
 
 ```
-npx apply-config github-actions karma-webpack-typescript
+npx apply-config karma-webpack-typescript
 ```
 
  * Verifies that `package.json` can be located
@@ -50,7 +50,7 @@ npx apply-config github-actions karma-webpack-typescript
 ## ESLint Typescript
 
 ```
-npx apply-config github-actions eslint-typescript
+npx apply-config eslint-typescript
 ```
  * copies sample `.eslintrc.js` to project
  * adds `lint` and `lint:fix` scripts to `package.json`
@@ -59,7 +59,7 @@ npx apply-config github-actions eslint-typescript
 ## Jest Typescript
 
 ```
-npx apply-config github-actions jest-typescript
+npx apply-config jest-typescript
 ```
  * copies sample `jest.config.js` to project
  * adds `test` and `test:watch` scripts to `package.json`
