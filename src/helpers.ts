@@ -138,6 +138,6 @@ export function loadPackageJson(path?: string): {
     return { packageJsonPath, packageJson, indent };
 }
 
-export function isDefined<T>(value: T | null | undefined): value is T{
+export function isDefined<T>(value: T | null | undefined): value is T {
     return value != null;
 }

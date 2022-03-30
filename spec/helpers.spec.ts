@@ -13,7 +13,7 @@ describe('helpers', () => {
                 'two@2.3.4',
                 'three@3.4.5',
                 'four@4.5.6',
-                undefined
+                undefined,
             ]);
         });
     });
