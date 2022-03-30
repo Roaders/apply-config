@@ -21,10 +21,10 @@ jobs:
           node-version: '16.x'
 
       - name: Install node modules and verify build
-        run: npm ci
-        run: npm run build --if-present
-        run: npm test --if-present
-        run: npm run lint --if-present
+        - run: npm ci
+        - run: npm run build --if-present
+        - run: npm test --if-present
+        - run: npm run lint --if-present
 
       - name: Release
         uses: justincy/github-action-npm-release@2.0.2
