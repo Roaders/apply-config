@@ -30,7 +30,6 @@ export async function configureEsLintTypescript(): Promise<void> {
     const dependencies = [
         'eslint',
         'eslint-config-prettier',
-        'eslint-config-standard',
         'eslint-plugin-import',
         'eslint-plugin-node',
         'eslint-plugin-prettier',
