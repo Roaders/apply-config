@@ -4,6 +4,7 @@ import {
     copyScripts,
     getDependencyVersions,
     installDependencies,
+    isDefined,
     loadPackageJson,
     updatePackageJsonScripts,
 } from '../helpers';
@@ -39,7 +40,7 @@ export async function configureEsLintTypescript(): Promise<void> {
         'prettier',
     ];
 
-    const versionedDependencies = getDependencyVersions(localPackageJson, dependencies);
+    const versionedDependencies = getDependencyVersions(localPackageJson, dependencies).filter(isDefined);
 
     const installSuccess = await installDependencies(versionedDependencies);
 

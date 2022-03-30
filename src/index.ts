@@ -16,7 +16,7 @@ enum Config {
 type ConfigNames = keyof typeof Config;
 
 async function applyConfig() {
-    const config = (process.argv[2] as unknown) as ConfigNames;
+    const config = process.argv[2] as unknown as ConfigNames;
 
     switch (config) {
         case 'github-actions':

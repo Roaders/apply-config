@@ -4,6 +4,7 @@ import {
     copyScripts,
     getDependencyVersions,
     installDependencies,
+    isDefined,
     loadPackageJson,
     updatePackageJsonScripts,
 } from '../helpers';
@@ -25,7 +26,7 @@ export async function configureTsJest(): Promise<void> {
     const scripts = copyScripts(localPackageJson, ['test', 'test:watch']);
     updatePackageJsonScripts(scripts, `Adding testing script to 'package.json'`, packageJson, packageJsonPath, indent);
 
-    const versionedDependencies = getDependencyVersions(localPackageJson, ['jest', 'ts-jest', '@types/jest']);
+    const versionedDependencies = getDependencyVersions(localPackageJson, ['jest', 'ts-jest', '@types/jest']).filter(isDefined);
 
     const installSuccess = await installDependencies(versionedDependencies);
 

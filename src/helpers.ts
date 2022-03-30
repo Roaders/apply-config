@@ -14,13 +14,13 @@ const detect = require('detect-json-indent');
 
 const versionModifierRegExp = /^[\^~]/;
 
-export function getDependencyVersions(packageJson: PackageJson, dependencyList: string[]): string[] {
+export function getDependencyVersions(packageJson: PackageJson, dependencyList: string[]): (string | undefined)[] {
     const dependencies = { ...packageJson.devDependencies, ...packageJson.dependencies };
 
     return dependencyList.map((dependencyName) => {
         const version = dependencies[dependencyName];
 
-        return version == null ? dependencyName : `${dependencyName}@${version.replace(versionModifierRegExp, '')}`;
+        return version == null ? undefined : `${dependencyName}@${version.replace(versionModifierRegExp, '')}`;
     });
 }
 
@@ -109,9 +109,7 @@ export function copyConfig(srcPath: string, targetPath: string, replaceContent?:
     complete();
 }
 
-export function loadPackageJson(
-    path?: string
-): {
+export function loadPackageJson(path?: string): {
     packageJsonPath: string;
     packageJson: PackageJson;
     indent: string;
@@ -138,4 +136,8 @@ export function loadPackageJson(
     }
 
     return { packageJsonPath, packageJson, indent };
+}
+
+export function isDefined<T>(value: T | null | undefined): value is T{
+    return value != null;
 }
